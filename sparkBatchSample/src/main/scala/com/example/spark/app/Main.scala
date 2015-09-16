@@ -4,7 +4,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object Main {
 	def main(args: Array[String]) {
-		val logFile = "hdfs://192.168.133.139/logs/FlumeData.1436445549116"
+		val logFile = args(0) //"hdfs://172.31.3.239/memo2.txt"
 		val conf = new SparkConf().setAppName("Simple Application")
 		val sc = new SparkContext(conf)
 		val logData = sc.textFile(logFile, 2).cache()

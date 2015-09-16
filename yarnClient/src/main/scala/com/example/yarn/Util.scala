@@ -13,14 +13,13 @@ import org.apache.hadoop.yarn.exceptions.YarnException
 import scala.collection.JavaConversions._
 
 object Util {
-
-	private val sparkBin = "/media/shiba/backup/develop/libraries/spark-1.2.0-bin-hadoop2.4/bin/"
+	private val sparkBin = "/media/shiba/shibaHDD/develop/tools/spark-1.4.1-bin-hadoop2.4/bin/"
 	private val conf = new YarnConfiguration()
-	private val yarnConfDir = "/media/shiba/backup/develop/libraries/hadoop-2.5.0/etc/hadoop/"
-	private val sparkAssemblyJarPath = "hdfs://192.168.133.214/user/shiba/spark-assembly-1.2.0-hadoop2.4.0.jar"
+	private val yarnConfDir = "/media/shiba/shibaHDD/develop/tools/hadoop-2.5.2/etc/hadoop/"
+	private val sparkAssemblyJarPath = "hdfs://52.69.4.230/user/shiba/spark-assembly-1.2.0-hadoop2.4.0.jar"
 
 	def init(): YarnClient = {
-		conf.set(YarnConfiguration.RM_ADDRESS, "192.168.133.214")
+		conf.set(YarnConfiguration.RM_ADDRESS, "52.69.4.230")
 		val yarnClient = YarnClient.createYarnClient
 		yarnClient.init(conf)
 		yarnClient.start()

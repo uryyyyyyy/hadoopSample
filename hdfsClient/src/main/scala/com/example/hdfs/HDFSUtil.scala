@@ -8,7 +8,7 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 
 object HDFSUtil {
 
-	lazy val hdfsUrl = "hdfs://192.168.133.139/"
+	lazy val hdfsUrl = "hdfs://54.92.87.167:9000/"
 
 	lazy val fs = {
 		try {
@@ -43,6 +43,7 @@ object HDFSUtil {
 	def pipe(in:BufferedInputStream, out:BufferedOutputStream):Unit = {
 		val buffer: Array[Byte] = new Array[Byte](1024)
 		var bytesRead: Int = 0
+		var times = 0
 		while ( {
 			bytesRead = in.read(buffer)
 			bytesRead
@@ -78,6 +79,12 @@ object HDFSUtil {
 		}else{
 			Seq.empty
 		}
+	}
+
+	//srcPath = jars/
+	def mkDir(srcPath:String):Unit = {
+		val path = new Path(URI.create(hdfsUrl + srcPath))
+		fs.mkdirs(path)
 	}
 
 }

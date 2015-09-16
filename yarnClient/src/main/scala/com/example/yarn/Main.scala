@@ -2,7 +2,7 @@ package com.example.yarn
 
 object Main {
 
-	val sparkAppPath = "hdfs://192.168.133.214/jarFiles/3_1_edp2-spark-batch-sample-2.0.0-SNAPSHOT.jar"
+	val sparkAppPath = "hdfs://52.69.4.230/jars/sparkBatchSample.jar"
 	val entryPoint = "com.example.SparkSample"
 	val uniqueName = "uniqueName"
 
