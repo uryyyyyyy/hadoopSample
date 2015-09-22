@@ -9,9 +9,9 @@ import org.apache.hadoop.hdfs.{DFSConfigKeys, HdfsConfiguration}
 
 object HDFSUtil {
 
-	lazy val hdfsUrl = "hdfs://54.65.23.49:8020/"
+//	lazy val hdfsUrl = "hdfs://54.65.23.49:8020/"
 
-	lazy val fs = {
+	def getFileSystem(hdfsUrl: String):FileSystem = {
 		try {
 			val conf = new Configuration(false)
 			conf.set(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY, hdfsUrl)
@@ -23,8 +23,8 @@ object HDFSUtil {
 	}
 
 	//distPath = jars/log.log5
-	def put(distPath:String):Either[String, BufferedOutputStream] = {
-		val path = new Path(URI.create(hdfsUrl + distPath))
+	def put(distPath:String, fs:FileSystem):Either[String, BufferedOutputStream] = {
+		val path = new Path(URI.create(distPath))
 		if (fs.exists(path)){
 			Left(s"file is already exist. finePath: $distPath")
 		}else{
@@ -33,8 +33,8 @@ object HDFSUtil {
 	}
 
 	//srcPath = jars/log.log5
-	def get(srcPath:String):Either[String, BufferedInputStream] = {
-		val path = new Path(URI.create(hdfsUrl + srcPath))
+	def get(srcPath:String, fs:FileSystem):Either[String, BufferedInputStream] = {
+		val path = new Path(URI.create(srcPath))
 		if (!fs.exists(path)){
 			Left(s"file is not exist. finePath: $srcPath")
 		}else{
@@ -57,24 +57,24 @@ object HDFSUtil {
 	}
 
 	//srcPath = jars/log.log5
-	def deleteFile(srcPath:String):Unit = {
-		val path = new Path(URI.create(hdfsUrl + srcPath))
+	def deleteFile(srcPath:String, fs:FileSystem):Unit = {
+		val path = new Path(URI.create(srcPath))
 		if (fs.exists(path)){
 			fs.delete(path, false)
 		}
 	}
 
 	//srcPath = jars/
-	def deleteDir(srcPath:String):Unit = {
-		val path = new Path(URI.create(hdfsUrl + srcPath))
+	def deleteDir(srcPath:String, fs:FileSystem):Unit = {
+		val path = new Path(URI.create(srcPath))
 		if (fs.exists(path)){
 			fs.delete(path, true)
 		}
 	}
 
 	//srcPath = jars/
-	def list(srcPath:String):Seq[Path] = {
-		val path = new Path(URI.create(hdfsUrl + srcPath))
+	def list(srcPath:String, fs:FileSystem):Seq[Path] = {
+		val path = new Path(URI.create(srcPath))
 		if (fs.exists(path)){
 			val ss = fs.listStatus(path)
 			ss.map(v => v.getPath).toSeq
@@ -84,8 +84,8 @@ object HDFSUtil {
 	}
 
 	//srcPath = jars/
-	def mkDir(srcPath:String):Unit = {
-		val path = new Path(URI.create(hdfsUrl + srcPath))
+	def mkDir(srcPath:String, fs:FileSystem):Unit = {
+		val path = new Path(URI.create(srcPath))
 		fs.mkdirs(path)
 	}
 
