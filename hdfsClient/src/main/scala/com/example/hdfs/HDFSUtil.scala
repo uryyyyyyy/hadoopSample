@@ -4,16 +4,18 @@ import java.io.{BufferedInputStream, BufferedOutputStream, IOException}
 import java.net.URI
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.{CommonConfigurationKeysPublic, FileSystem, Path}
+import org.apache.hadoop.hdfs.{DFSConfigKeys, HdfsConfiguration}
 
 object HDFSUtil {
 
-	lazy val hdfsUrl = "hdfs://54.92.87.167:9000/"
+	lazy val hdfsUrl = "hdfs://54.65.23.49:8020/"
 
 	lazy val fs = {
 		try {
 			val conf = new Configuration(false)
-			conf.set("fs.defaultFS", hdfsUrl)
+			conf.set(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY, hdfsUrl)
+			conf.setInt(DFSConfigKeys.DFS_REPLICATION_KEY, 1)
 			FileSystem.get(URI.create(hdfsUrl), conf)
 		} catch {
 			case e:IOException => e.printStackTrace(); throw new RuntimeException()
