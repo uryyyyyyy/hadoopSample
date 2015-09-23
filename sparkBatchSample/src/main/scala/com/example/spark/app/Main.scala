@@ -9,6 +9,8 @@ object Main {
 		val sc = new SparkContext(conf)
 		val logData = sc.textFile(logFile, 2).cache()
 		println("----Start----")
+
+
 		logData.foreach(println)
 		val numAs = logData.filter(line => line.contains("a")).count()
 		val numBs = logData.filter(line => line.contains("b")).count()

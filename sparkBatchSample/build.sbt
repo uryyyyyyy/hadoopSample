@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
 		.exclude("com.esotericsoftware.minlog", "minlog")
 //		.exclude("org.eclipse.jetty.orbit", "javax.activation")
 		.exclude("commons-beanutils", "commons-beanutils-core")
-		.exclude("commons-collections", "commons-collections")
+		.exclude("commons-beanutils", "commons-beanutils")
 		.exclude("org.apache.hadoop","hadoop-yarn-api")
 		.exclude("org.slf4j", "jcl-over-slf4j")
 //		.exclude("org.eclipse.jetty.orbit", "javax.mail.glassfish")
