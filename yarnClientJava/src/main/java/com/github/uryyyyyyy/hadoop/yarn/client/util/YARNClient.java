@@ -36,7 +36,7 @@ public class YARNClient {
         return yarnClient;
     }
 
-    public static ApplicationId launchApp(YarnClient client, String jarPath, String mainClass) throws IOException, YarnException {
+    public static ApplicationId launchApp(YarnClient client, String appMasterJarPath, String containerJarPath, String appMasterMainClass, String containerMainClass) throws IOException, YarnException {
         // application creation
         YarnClientApplication app = client.createApplication();
         ContainerLaunchContext amContainer = Records.newRecord(ContainerLaunchContext.class);
@@ -45,9 +45,8 @@ public class YARNClient {
         int numberOfInstances = 1;
         List<String> commands = new ArrayList<>();
         commands.add("$JAVA_HOME/bin/java" +
-                " -Xmx256M" +
-                " com.github.uryyyyyyy.hadoop.yarn.appMaster.Main"+
-                "  " + jarPath +" "+ mainClass + " myArg "+
+                " -Xmx256M " + appMasterMainClass +
+                "  " + containerJarPath +" "+ containerMainClass + " myArg "+
                 " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                 " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr");
 
@@ -55,7 +54,7 @@ public class YARNClient {
 
         //add the jar which contains the Application master code to classpath
         LocalResource appMasterJar = Records.newRecord(LocalResource.class);
-        YARNLaunchUtil.setUpLocalResource(new Path(jarPath), appMasterJar, client.getConfig());
+        YARNLaunchUtil.setUpLocalResource(new Path(appMasterJarPath), appMasterJar, client.getConfig());
         amContainer.setLocalResources(Collections.singletonMap("helloworld.jar", appMasterJar));
 
         //setup env to get all yarn and hadoop classes in classpath
@@ -88,6 +87,10 @@ public class YARNClient {
 
     public static ApplicationId launchMapReduce(YarnClient client, String jarPath) throws IOException, YarnException {
         return null;
+    }
+
+    public static void killApp(YarnClient client, String appId) throws IOException, YarnException {
+        client.killApplication(ConverterUtils.toApplicationId(appId));
     }
 
     public static List<List<ApplicationReport>> getAllApplicationReport(YarnClient client) throws IOException, YarnException {

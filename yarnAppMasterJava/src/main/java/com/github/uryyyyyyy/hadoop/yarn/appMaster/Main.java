@@ -13,6 +13,7 @@ import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.protocolrecords.AllocateResponse;
 import org.apache.hadoop.yarn.api.records.Container;
 import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
+import org.apache.hadoop.yarn.api.records.ContainerStatus;
 import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;
 import org.apache.hadoop.yarn.api.records.LocalResource;
 import org.apache.hadoop.yarn.api.records.Priority;
@@ -26,7 +27,7 @@ import org.apache.hadoop.yarn.util.Records;
 
 public class Main{
 
-    public static void main(String[] args) throws IOException, YarnException {
+    public static void main(String[] args) throws IOException, YarnException, InterruptedException {
         if(args.length < 2){
             System.out.println("usage: <jarPath> <mainClass> <args>");
             return;
@@ -38,6 +39,7 @@ public class Main{
 
         // Initialize clients to ResourceManager and NodeManagers
         Configuration conf = new YarnConfiguration();
+        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
 
         AMRMClient<ContainerRequest> rmClient = AMRMClient.createAMRMClient();
         rmClient.init(conf);
@@ -86,20 +88,29 @@ public class Main{
                 ContainerLaunchContext ctx = Records.newRecord(ContainerLaunchContext.class);
 
                 List<String> commands = new ArrayList<>();
-                commands.add("$JAVA_HOME/bin/java" +
-                        " -Xmx256M " + mainClass + myArg +
+                String command = "$JAVA_HOME/bin/java" +
+                        " -Xmx256M " + mainClass + " " + myArg +
                         " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
-                        " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr");
+                        " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr";
 
+                System.out.println("Launching command: " + command);
+
+                commands.add(command);
                 ctx.setCommands(commands);
 
                 ctx.setLocalResources(Collections.singletonMap("helloworld.jar", appMasterJar));
                 ctx.setEnvironment(env);
 
-                System.out.println("Launching container " + container);
+                System.out.println("Launching container: " + container);
                 nmClient.startContainer(container, ctx);
             }
+
+            for(ContainerStatus status : response.getCompletedContainersStatuses()){
+                System.out.println("completed" + status.getContainerId());
+                completedContainers+=1;
+            }
         }
+        Thread.sleep(1000);
 
         // Un-register with ResourceManager
         rmClient.unregisterApplicationMaster(
