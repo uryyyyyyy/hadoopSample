@@ -3,6 +3,7 @@ package com.github.uryyyyyyy.hadoop.yarn.client.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.hadoop.yarn.api.records.ApplicationSubmissionContext;
 import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
 import org.apache.hadoop.yarn.api.records.LocalResource;
 import org.apache.hadoop.yarn.api.records.Resource;
+import org.apache.hadoop.yarn.api.records.YarnApplicationState;
 import org.apache.hadoop.yarn.client.api.YarnClient;
 import org.apache.hadoop.yarn.client.api.YarnClientApplication;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
@@ -24,7 +26,13 @@ import org.apache.hadoop.yarn.exceptions.YarnException;
 import org.apache.hadoop.yarn.util.ConverterUtils;
 import org.apache.hadoop.yarn.util.Records;
 
+import com.google.common.collect.ImmutableSet;
+
 public class YARNClient {
+
+    private static final String sparkBin = "/media/shiba/backup/develop/libraries/spark-1.4.1-bin-hadoop2.4/bin/";
+    private static final String yarnConfDir = "/media/shiba/backup/develop/libraries/hadoop-2.5.2/etc/hadoop/";
+    private static final String sparkAssemblyJarPath = "hdfs://192.168.133.214/tmp/spark-assembly-1.4.1-hadoop2.4.0.jar";
 
     public static YarnClient createYarnClient(String rmAddress, String hdfsUrl){
         YarnConfiguration conf = new YarnConfiguration();
@@ -81,11 +89,59 @@ public class YARNClient {
         return appId;
     }
 
-    public static ApplicationId launchSpackApp(YarnClient client, String jarPath) throws IOException, YarnException {
-        return null;
+    public static ApplicationId launchSparkApp(YarnClient client, String jarFilePath, String entryClass, String uniqueCode, List<String> sparkOptions, List<String> appOptions) throws IOException, YarnException, InterruptedException {
+
+        String command = sparkBin + "spark-submit" +
+                " --class " + entryClass +
+                " --master yarn-cluster " +
+                " --name " + uniqueCode +
+                " " +//sparkOption
+                " " + jarFilePath +
+                " " + " "; //appOptions
+
+        Runtime r = Runtime.getRuntime();
+        String[] envArr = new String[2];
+        envArr[0] = "YARN_CONF_DIR=" + yarnConfDir;
+        envArr[1] = "SPARK_JAR=" + sparkAssemblyJarPath;
+        System.out.println("command: " + command);
+        System.out.println("env: " + envArr[0] + System.lineSeparator() + envArr[1]);
+        Process process = r.exec(command, envArr);
+        return loopToGetYarnApplicationId(client, process, uniqueCode);
     }
 
-    public static ApplicationId launchMapReduce(YarnClient client, String jarPath) throws IOException, YarnException {
+    private static ApplicationId loopToGetYarnApplicationId(YarnClient client, Process process, String appName) throws InterruptedException, IOException, YarnException {
+        ApplicationId applicationId = null;
+        while (process.isAlive() && (applicationId == null)) {
+            Thread.sleep(1000);
+            applicationId = getWaitingYarnApplicationId(client, appName);
+        }
+        if(applicationId == null){
+            applicationId = getYarnApplicationId(client, appName);
+        }
+        return applicationId;
+    }
+
+    private static ApplicationId getWaitingYarnApplicationId(YarnClient client, String appName) throws IOException, YarnException {
+        List<ApplicationReport> reportList = client.getApplications(ImmutableSet.of("SPARK"), EnumSet.of(YarnApplicationState.SUBMITTED, YarnApplicationState.ACCEPTED, YarnApplicationState.RUNNING));
+        for (ApplicationReport report : reportList) {
+            if (report.getName().equals(appName)) {
+                return report.getApplicationId();
+            }
+        }
+        throw new RuntimeException("cannot find applicationId");
+    }
+
+    private static ApplicationId getYarnApplicationId(YarnClient client, String appName) throws IOException, YarnException {
+        List<ApplicationReport> reportList = client.getApplications(ImmutableSet.of("SPARK"), EnumSet.of(YarnApplicationState.NEW, YarnApplicationState.NEW_SAVING, YarnApplicationState.SUBMITTED, YarnApplicationState.ACCEPTED, YarnApplicationState.RUNNING, YarnApplicationState.FINISHED, YarnApplicationState.FAILED, YarnApplicationState.KILLED));
+        for (ApplicationReport report : reportList) {
+            if (report.getName().equals(appName)) {
+                return report.getApplicationId();
+            }
+        }
+        throw new RuntimeException("cannot find applicationId");
+    }
+
+    public static ApplicationId launchMapReduce(YarnClient client) throws IOException, YarnException {
         return null;
     }
 
