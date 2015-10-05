@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.uryyyyyyy</groupId>
-  <artifactId>yarnClient</artifactId>
+  <artifactId>hdfsClient</artifactId>
   <version>0.1.0</version>
   <packaging>jar</packaging>
 
@@ -37,15 +37,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.4</version>
         <configuration>
@@ -53,7 +44,7 @@
           <transformers>
             <transformer
                 implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-              <mainClass>com.github.uryyyyyyy.hadoop.yarn.client.LaunchSparkApp</mainClass>
+              <mainClass>com.github.uryyyyyyy.hadoop.hdfs.client.Main</mainClass>
             </transformer>
           </transformers>
         </configuration>
