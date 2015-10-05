@@ -75,7 +75,7 @@
 					<transformers>
 						<transformer
 								implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-							<mainClass>com.github.uryyyyyyy.hadoop.yarn.client.LaunchSparkApp</mainClass>
+							<mainClass>com.github.uryyyyyyy.hadoop.spark.streaming.Main</mainClass>
 						</transformer>
 					</transformers>
 				</configuration>

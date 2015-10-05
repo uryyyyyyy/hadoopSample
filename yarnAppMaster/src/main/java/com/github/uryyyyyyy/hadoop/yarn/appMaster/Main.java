@@ -2,6 +2,7 @@ package com.github.uryyyyyyy.hadoop.yarn.appMaster;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +30,14 @@ public class Main{
 
     public static void main(String[] args) throws IOException, YarnException, InterruptedException {
         if(args.length < 2){
-            System.out.println("usage: <jarPath> <mainClass> <args>");
-            return;
+            throw new RuntimeException("usage: <jarPath> <mainClass> <args> ...");
         }
         String jarPath = args[0];
+        System.out.println(jarPath);
         String mainClass = args[1];
-        String myArg = args[2];
-
+        System.out.println(mainClass);
+        String[] containerArgs = Arrays.copyOfRange(args, 2, args.length);
+        System.out.println(Arrays.toString(containerArgs));
 
         // Initialize clients to ResourceManager and NodeManagers
         Configuration conf = new YarnConfiguration();
@@ -87,9 +89,10 @@ public class Main{
             for (Container container : response.getAllocatedContainers()) {
                 ContainerLaunchContext ctx = Records.newRecord(ContainerLaunchContext.class);
 
+                String containerArgsStr = argsToStr(containerArgs);
                 List<String> commands = new ArrayList<>();
                 String command = "$JAVA_HOME/bin/java" +
-                        " -Xmx256M " + mainClass + " " + myArg +
+                        " -Xmx256M " + mainClass + " " + containerArgsStr +
                         " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                         " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr";
 
@@ -115,5 +118,14 @@ public class Main{
         // Un-register with ResourceManager
         rmClient.unregisterApplicationMaster(
                 FinalApplicationStatus.SUCCEEDED, "", "");
+    }
+
+    private static String argsToStr(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for(String arg : args){
+            sb.append(arg);
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }

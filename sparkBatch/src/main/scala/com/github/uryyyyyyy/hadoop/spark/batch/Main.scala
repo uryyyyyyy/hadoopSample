@@ -4,6 +4,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object Main {
 	def main(args: Array[String]) {
+		if (args.length < 5) {
+			println("usage: <targetTextPath>")
+			return
+		}
 		val logFile = args(0) //"hdfs://172.31.3.239/memo2.txt"
 		val conf = new SparkConf().setAppName("Simple Application")
 		val sc = new SparkContext(conf)

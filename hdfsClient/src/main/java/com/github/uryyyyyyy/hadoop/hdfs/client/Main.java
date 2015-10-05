@@ -17,13 +17,13 @@ public class Main{
             System.out.println("usage: <hdfsUrl> <localFile> <hdfsDir>");
             return;
         }
-        String hdfsUrl = args[0];
-        String localFile = args[1];
-        String hdfsDir = args[2];
+        String hdfsUrl = args[0]; // 192.168.133.214
+        String localFile = args[1]; // /home/hoge/my.txt
+        String hdfsDir = args[2]; // /myTmp/normalBatch-0.1.0.jar
 
         FileSystem fs = HDFSUtil.getFileSystem(hdfsUrl);
         InputStream in = new BufferedInputStream(new FileInputStream(new File(localFile)));
-        OutputStream out = HDFSUtil.put(hdfsUrl + hdfsDir, fs);
+        OutputStream out = HDFSUtil.put(hdfsDir, fs);
         HDFSUtil.pipe(in, out);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.uryyyyyyy.hadoop.yarn.client;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.client.api.YarnClient;
@@ -22,10 +23,11 @@ public class LaunchApp {
         String containerJarPath = args[3]; // "tmp/container.jar"
         String appMasterMainClass = args[4]; // "com.github.uryyyyyyy.hadoop.yarn.appMaster.Main"
         String containerMainClass = args[5]; // "com.github.uryyyyyyy.hadoop.yarn.normal.Main"
+        String[] containerArgs = Arrays.copyOfRange(args, 6, args.length);
 
         YarnClient client = YARNClient.createYarnClient(rmAddress, hdfsUrl);
 
-        ApplicationId id = YARNClient.launchApp(client, hdfsUrl + appMasterJarPath, hdfsUrl + containerJarPath, appMasterMainClass, containerMainClass);
+        ApplicationId id = YARNClient.launchApp(client, hdfsUrl + appMasterJarPath, hdfsUrl + containerJarPath, appMasterMainClass, containerMainClass, containerArgs);
 
         System.out.println(ConverterUtils.toString(id));
     }

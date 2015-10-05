@@ -2,6 +2,7 @@ package com.github.uryyyyyyy.hadoop.yarn.client.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
@@ -28,7 +29,7 @@ public class YARNLaunchUtil {
 
     //add the yarn jars to classpath
     public static void setUpEnv(Map<String, String> env, Configuration conf){
-        String[] classPath =  conf.getStrings(YarnConfiguration.YARN_APPLICATION_CLASSPATH,YarnConfiguration.DEFAULT_YARN_APPLICATION_CLASSPATH);
+        String[] classPath =  conf.getStrings(YarnConfiguration.YARN_APPLICATION_CLASSPATH, YarnConfiguration.DEFAULT_YARN_APPLICATION_CLASSPATH);
         for(String c : classPath){
             Apps.addToEnvironment(env, ApplicationConstants.Environment.CLASSPATH.name(),
                     c.trim());
@@ -36,6 +37,23 @@ public class YARNLaunchUtil {
         Apps.addToEnvironment(env,
                 ApplicationConstants.Environment.CLASSPATH.name(),
                 ApplicationConstants.Environment.PWD.$() + File.separator + "*");
+    }
 
+    public static String argsToStr(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for(String arg : args){
+            sb.append(arg);
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+
+    public static String listToStr(List<String> args) {
+        StringBuilder sb = new StringBuilder();
+        for(String arg : args){
+            sb.append(arg);
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }

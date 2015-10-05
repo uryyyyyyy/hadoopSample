@@ -44,17 +44,17 @@ public class YARNClient {
         return yarnClient;
     }
 
-    public static ApplicationId launchApp(YarnClient client, String appMasterJarPath, String containerJarPath, String appMasterMainClass, String containerMainClass) throws IOException, YarnException {
+    public static ApplicationId launchApp(YarnClient client, String appMasterJarPath, String containerJarPath, String appMasterMainClass, String containerMainClass, String[] containerArgs) throws IOException, YarnException {
         // application creation
         YarnClientApplication app = client.createApplication();
         ContainerLaunchContext amContainer = Records.newRecord(ContainerLaunchContext.class);
         //application master is a just java program with given commands
 
-        int numberOfInstances = 1;
+        String argsStr = YARNLaunchUtil.argsToStr(containerArgs);
         List<String> commands = new ArrayList<>();
         commands.add("$JAVA_HOME/bin/java" +
                 " -Xmx256M " + appMasterMainClass +
-                "  " + containerJarPath +" "+ containerMainClass + " myArg "+
+                "  " + containerJarPath +" "+ containerMainClass + " " + argsStr + "" +
                 " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                 " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr");
 
@@ -89,15 +89,15 @@ public class YARNClient {
         return appId;
     }
 
-    public static ApplicationId launchSparkApp(YarnClient client, String jarFilePath, String entryClass, String uniqueCode, List<String> sparkOptions, List<String> appOptions) throws IOException, YarnException, InterruptedException {
+    public static ApplicationId launchSparkApp(YarnClient client, String jarFilePath, String entryClass, String uniqueCode, List<String> sparkOptions, String[] appArgs) throws IOException, YarnException, InterruptedException {
 
         String command = sparkBin + "spark-submit" +
                 " --class " + entryClass +
                 " --master yarn-cluster " +
                 " --name " + uniqueCode +
-                " " +//sparkOption
+                " " + YARNLaunchUtil.listToStr(sparkOptions) +
                 " " + jarFilePath +
-                " " + " "; //appOptions
+                " " + YARNLaunchUtil.argsToStr(appArgs);
 
         Runtime r = Runtime.getRuntime();
         String[] envArr = new String[2];
