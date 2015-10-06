@@ -72,3 +72,6 @@ cd ../
 java -jar ./yarnClient/target/yarnClient-0.1.0.jar 192.168.133.214 hdfs://192.168.133.214/ /tmp/yarnAppMaster-0.1.5.jar /tmp/normalBatch-0.1.0.jar com.github.uryyyyyyy.hadoop.yarn.appMaster.Main com.github.uryyyyyyy.normal.Main hoge hugo
 
 ```
+
+## kill app
+

@@ -4,7 +4,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object Main {
 	def main(args: Array[String]) {
-		if (args.length < 5) {
+		if (args.length < 1) {
 			println("usage: <targetTextPath>")
 			return
 		}
