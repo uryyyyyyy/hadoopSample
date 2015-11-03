@@ -16,5 +16,6 @@
 		<module>sparkStreaming</module>
 		<module>yarnAppMaster</module>
 		<module>yarnClient</module>
+		<module>yarnAppMaster2</module>
 	</modules>
 </project>
