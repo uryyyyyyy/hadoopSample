@@ -1,9 +1,8 @@
-package com.github.uryyyyyyy.hadoop.spark.batch.generator
+package com.github.uryyyyyyy.hadoop.spark.batch.getAll
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTime, DateTimeConstants}
-import scala.util.Random
 
 
 object Hello {
@@ -11,16 +10,19 @@ object Hello {
 
 		val conf = new SparkConf().setAppName("Simple Application").set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 		val sc = new SparkContext(conf)
+		val rdd = sc.textFile("/tmp/myobj.json", 10)
 		println("----Start----")
-
-		val rdd = sc.range(1, 30000000, 1, 10)
+		val acc = sc.accumulator(0, "action counter")
 
 		try {
-			val jsonRDD = rdd.map(v => {
-				s"""{"id": ${v}, "name": "${v}_myName", "description": ${new Random().nextDouble()} }"""
+			val rdd2 = rdd.map(v => {
+				acc += 1
+				(v * 2, 2)
 			})
 
-			jsonRDD.saveAsTextFile("/tmp/myobj.json")
+			val numOfSunday = rdd2.collect()
+			println(numOfSunday)
+			println(acc)
 		} finally {
 			sc.stop
 		}
