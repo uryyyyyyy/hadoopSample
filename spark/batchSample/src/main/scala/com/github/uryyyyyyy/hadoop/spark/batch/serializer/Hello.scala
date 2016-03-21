@@ -23,6 +23,9 @@ object Hello {
 			println("----false----")
 			new MyObjNot(1, "hoge")
 		}
+
+
+
 		try {
 			val dateTimeRDD = rdd.map(v => {
 				myObj.getId() + v

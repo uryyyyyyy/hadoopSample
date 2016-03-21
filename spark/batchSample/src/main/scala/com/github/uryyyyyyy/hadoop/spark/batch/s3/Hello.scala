@@ -1,4 +1,4 @@
-package com.github.uryyyyyyy.hadoop.spark.batch.emr
+package com.github.uryyyyyyy.hadoop.spark.batch.s3
 
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -7,7 +7,7 @@ object Hello {
 
 		val logFile = args(0) //s3n://uryyyyyyy/aaa
 		val target = args(1) //s3n://uryyyyyyy/aaa
-		val conf = new SparkConf().setAppName("Simple Application")
+		val conf = new SparkConf().setAppName("s3 app")
 		val sc = new SparkContext(conf)
 		val logData = sc.textFile(logFile, 2).cache()
 		println("----Start----")
