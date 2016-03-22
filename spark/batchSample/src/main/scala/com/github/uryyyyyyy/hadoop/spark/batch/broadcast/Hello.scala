@@ -13,8 +13,13 @@ object Hello {
 		val myObj = MyObj(2, "name")
 		val gMyObj = sc.broadcast(myObj)
 
+		val twice = (i:Long) => i * 2
+		val gTwice = sc.broadcast(twice)
+
 		try {
-			val rdd2 = rdd.map(v => (gMyObj.value.id * v, gMyObj.value.name))
+			val rdd2 = rdd.map(v => gTwice.value(v))
+				.map(v => gMyObj.value.divide(v))
+				.map(v => (gMyObj.value.id * v, gMyObj.value.name))
 
 			val list = rdd2.collect()
 			list.foreach(v => println(v))
@@ -24,4 +29,8 @@ object Hello {
 	}
 }
 
-case class MyObj(id:Int, name:String)
+case class MyObj(id:Int, name:String){
+	def divide(v:Long) ={
+		v/7
+	}
+}
