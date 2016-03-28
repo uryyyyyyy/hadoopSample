@@ -22,7 +22,7 @@ import java.util.*;
 public class LaunchApp {
 
 	public static void main(String[] args) throws IOException, YarnException {
-		if(args.length < 5){
+		if(args.length < 6){
 			System.out.println("usage: <rmAddress> <hdfsUrl> <appMasterJarPath> <containerJarPath> <mainClass>");
 			return;
 		}

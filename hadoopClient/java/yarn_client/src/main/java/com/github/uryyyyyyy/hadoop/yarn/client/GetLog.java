@@ -14,18 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GetLog {
-	private final static int YARN_HEAP_SIZE = 128;// M
-	private static final String yarnConfDir = "/media/shiba/backup/develop/libraries/hadoop-2.5.2/etc/hadoop/";
-
+	private final static int YARN_HEAP_SIZE = 128;// MB
 
 	public static void main(String[] args) throws IOException, YarnException {
-		if(args.length < 3){
-			System.out.println("usage: <rmAddress> <hdfsUrl> <applicationId>");
+		if(args.length < 1){
+			System.out.println("usage: <applicationId>");
 			return;
 		}
-		String rmAddress = args[0]; // 192.168.133.214
-		String hdfsUrl = args[1]; // hdfs://192.168.133.214
-		String applicationId = args[2]; // application_1441950155020_0060
+		String applicationId = args[0]; // application_1441950155020_0060
 
 		List<String> report = getAppLog(applicationId);
 		System.out.println(report);
@@ -68,7 +64,6 @@ public class GetLog {
 				.redirectOutput(output);
 
 		Map<String, String> environment = processBuilder.environment();
-		environment.put("HADOOP_CONF_DIR", yarnConfDir);
 		environment.put("YARN_HEAPSIZE", "" + YARN_HEAP_SIZE);
 
 		Process process = null;
