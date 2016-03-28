@@ -15,9 +15,6 @@ lazy val commonSettings = Seq(
 	scalaVersion := "2.11.7",
 	libraryDependencies ++= Seq(
 		"org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-		"org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
-		"org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
-		"org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 		"org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
 	)
 )
