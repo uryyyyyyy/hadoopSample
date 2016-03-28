@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <profile name="SBT 1" modules="batch_helloWorld,scala,mapReduce_helloWorld,yarn_appMaster,yarn_batch_helloWorld" />
+  </component>
+</project>

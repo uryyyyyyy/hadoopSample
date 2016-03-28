@@ -2,12 +2,6 @@ name := """spark2.11_samples"""
 
 version := "1.0"
 
-scalaVersion := "2.11.7"
-
-libraryDependencies ++= Seq(
-	"joda-time" % "joda-time" % "2.9.2"
-)
-
 lazy val sparkVersion = "1.6.1"
 
 lazy val commonSettings = Seq(
@@ -18,8 +12,6 @@ lazy val commonSettings = Seq(
 		"org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
 	)
 )
-
-assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
 lazy val batch_helloWorld = (project in file("batch_helloWorld")).
 	settings(commonSettings: _*)

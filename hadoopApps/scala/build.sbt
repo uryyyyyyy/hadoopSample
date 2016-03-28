@@ -2,11 +2,20 @@ name := """hadoopApps"""
 
 version := "1.0"
 
-scalaVersion := "2.11.7"
+lazy val commonSettings = Seq(
+	organization := "com.github.uryyyyyyy",
+	scalaVersion := "2.11.7",
+	libraryDependencies ++= Seq(
+		"org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
+	)
+)
 
-// Change this to another test framework if you prefer
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+lazy val yarn_batch_helloWorld = (project in file("yarn_batch_helloWorld")).
+	settings(commonSettings: _*)
 
-// Uncomment to use Akka
-//libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.11"
+lazy val yarn_appMaster = (project in file("yarn_appMaster")).
+	settings(commonSettings: _*)
+
+lazy val mapReduce_helloWorld = (project in file("mapReduce_helloWorld")).
+	settings(commonSettings: _*)
 

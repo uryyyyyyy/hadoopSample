@@ -4,12 +4,14 @@ version := "1.0"
 
 lazy val commonSettings = Seq(
 	organization := "com.github.uryyyyyyy",
+	autoScalaLibrary := false,
+	crossPaths := false,
+	javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
 	libraryDependencies ++= Seq(
 		"org.apache.hadoop" % "hadoop-client" % "2.7.2" % "provided",
 		"junit" % "junit" % "4.12"  % "test"
 	)
 )
-
 
 lazy val yarn_batch_helloWorld = (project in file("yarn_batch_helloWorld")).
 	settings(commonSettings: _*)

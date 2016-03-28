@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mapReduce_helloWorld.iml" filepath="$PROJECT_DIR$/.idea/modules/mapReduce_helloWorld.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mapReduce_helloWorld-build.iml" filepath="$PROJECT_DIR$/.idea/modules/mapReduce_helloWorld-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scala.iml" filepath="$PROJECT_DIR$/.idea/modules/scala.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scala-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scala-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/yarn_appMaster.iml" filepath="$PROJECT_DIR$/.idea/modules/yarn_appMaster.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/yarn_appMaster-build.iml" filepath="$PROJECT_DIR$/.idea/modules/yarn_appMaster-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/yarn_batch_helloWorld.iml" filepath="$PROJECT_DIR$/.idea/modules/yarn_batch_helloWorld.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/yarn_batch_helloWorld-build.iml" filepath="$PROJECT_DIR$/.idea/modules/yarn_batch_helloWorld-build.iml" />
+    </modules>
+  </component>
+</project>
