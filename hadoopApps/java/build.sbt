@@ -2,11 +2,21 @@ name := """hadoopApps"""
 
 version := "1.0"
 
-scalaVersion := "2.11.6"
-
-libraryDependencies ++= Seq(
-  // Uncomment to use Akka
-  //"com.typesafe.akka" % "akka-actor_2.11" % "2.3.9",
-  "junit"             % "junit"           % "4.12"  % "test",
-  "com.novocode"      % "junit-interface" % "0.11"  % "test"
+lazy val commonSettings = Seq(
+	organization := "com.github.uryyyyyyy",
+	libraryDependencies ++= Seq(
+		"org.apache.hadoop" % "hadoop-client" % "2.7.2" % "provided",
+		"junit" % "junit" % "4.12"  % "test"
+	)
 )
+
+
+lazy val yarn_batch_helloWorld = (project in file("yarn_batch_helloWorld")).
+	settings(commonSettings: _*)
+
+lazy val yarn_appMaster = (project in file("yarn_appMaster")).
+	settings(commonSettings: _*)
+
+lazy val mapReduce_helloWorld = (project in file("mapReduce_helloWorld")).
+	settings(commonSettings: _*)
+
