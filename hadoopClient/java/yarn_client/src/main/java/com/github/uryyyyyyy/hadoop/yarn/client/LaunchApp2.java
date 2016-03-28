@@ -91,7 +91,7 @@ public class LaunchApp2 {
         return appId;
     }
 
-    private static void setUpLocalResource(org.apache.hadoop.fs.Path resourcePath, LocalResource resource, Configuration conf) throws IOException {
+    private static void setUpLocalResource(Path resourcePath, LocalResource resource, Configuration conf) throws IOException {
         FileStatus jarStat = FileSystem.get(conf).getFileStatus(resourcePath);
         resource.setResource(ConverterUtils.getYarnUrlFromPath(resourcePath));
         resource.setSize(jarStat.getLen());
