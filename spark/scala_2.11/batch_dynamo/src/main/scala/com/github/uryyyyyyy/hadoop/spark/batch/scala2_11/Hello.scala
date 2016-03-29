@@ -13,19 +13,18 @@ object Hello {
 		val conf = new SparkConf().setAppName("Simple Application")
 		val sc = new SparkContext(conf)
 		val rdd = sc.range(1, 1000, 1)
-		val accessKey = args(0) //sys.env("AWS_ACCESS_KEY_ID")
-		val secretKey = args(1) //sys.env("AWS_SECRET_ACCESS_KEY")
-		val file = args(2)
+		val accessKey = sys.env("AWS_ACCESS_KEY_ID")
+		val secretKey = sys.env("AWS_SECRET_ACCESS_KEY")
+		val file = args(0)
 		lazy val dynamo = DynamoUtils.setupDynamoClientConnection(accessKey, secretKey)
 
 		println("----Start----")
 		rdd.map(v => {
 			val table = dynamo.getTable("sample")
 
-			val myEnv = sys.env("myEnv")
 			val key = new PrimaryKey("id", 1)
 			val ss = table.getItem(key)
-			ss.toString + myEnv
+			ss.toString
 		}).saveAsTextFile(file)
 
 	}
