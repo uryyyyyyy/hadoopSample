@@ -18,6 +18,14 @@ object Hello {
 		val wordCount = pairs.reduceByKey(_ + _)
 		wordCount.saveAsTextFiles("/tmp/ss")
 
+		//you can kill it gracefully. see below
+		//https://metabroadcast.com/blog/stop-your-spark-streaming-application-gracefully
+		sys.ShutdownHookThread {
+			println("Gracefully stopping Spark Streaming Application")
+			ssc.stop(true, true)
+			println("Application stopped")
+		}
+
 		ssc.start()
 		ssc.awaitTermination()
 	}
