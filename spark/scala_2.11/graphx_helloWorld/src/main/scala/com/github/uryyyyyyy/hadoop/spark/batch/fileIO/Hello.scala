@@ -1,4 +1,4 @@
-package com.github.uryyyyyyy.hadoop.spark.batch.localToHdfs
+package com.github.uryyyyyyy.hadoop.spark.batch.fileIO
 
 import org.apache.spark.{SparkConf, SparkContext}
 

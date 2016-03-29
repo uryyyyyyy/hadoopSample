@@ -2,13 +2,15 @@ name := """hadoopApps"""
 
 version := "1.0"
 
+lazy val hadoopVersion = "2.7.2"
+
 lazy val commonSettings = Seq(
 	organization := "com.github.uryyyyyyy",
 	autoScalaLibrary := false,
 	crossPaths := false,
 	javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
 	libraryDependencies ++= Seq(
-		"org.apache.hadoop" % "hadoop-client" % "2.7.2" % "provided",
+		"org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided",
 		"junit" % "junit" % "4.12"  % "test"
 	)
 )
