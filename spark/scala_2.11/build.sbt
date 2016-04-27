@@ -16,6 +16,9 @@ lazy val commonSettings = Seq(
 lazy val batch_helloWorld = (project in file("batch_helloWorld")).
 	settings(commonSettings: _*)
 
+lazy val batch_multiFileOutput = (project in file("batch_multiFileOutput")).
+	settings(commonSettings: _*)
+
 lazy val streaming_helloWorld = (project in file("streaming_helloWorld")).
 	settings(commonSettings: _*)
 
