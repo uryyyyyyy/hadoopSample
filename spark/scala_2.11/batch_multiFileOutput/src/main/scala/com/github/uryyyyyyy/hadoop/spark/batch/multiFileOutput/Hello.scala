@@ -15,7 +15,6 @@ object Hello {
 		println("hello" -> "world")
 
 		rdd.map(i => (i, "hoge:" + i))
-			.saveAsHadoopFile("output/path", classOf[String], classOf[String],
-				classOf[RDDMultipleTextOutputFormat])
+			.saveAsHadoopFile("sile:///home/shiba/path", classOf[String], classOf[String], classOf[RDDMultipleTextOutputFormat])
 	}
 }
