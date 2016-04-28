@@ -7,14 +7,17 @@ object Hello {
 
 		val conf = new SparkConf().setAppName("Simple Application")
 		val sc = new SparkContext(conf)
-		val rdd = sc.range(1, 100000, 1, 10)
+		val rdd = sc.range(1, 1000, 1, 10)
 		println("----Start----")
 
 		//check for using scala-library_2.11
 		//if using 2.10, this method cause Exception.
 		println("hello" -> "world")
 
-		rdd.map(i => (i, "hoge:" + i))
-			.saveAsHadoopFile("sile:///home/shiba/path", classOf[String], classOf[String], classOf[RDDMultipleTextOutputFormat])
+		rdd
+			.map(i => i%8)
+			.map(i => (i.toString, "str" + i))
+			.groupByKey()
+			.saveAsHadoopFile("file:///your/path", classOf[String], classOf[String], classOf[RDDMultipleTextOutputFormat])
 	}
 }
