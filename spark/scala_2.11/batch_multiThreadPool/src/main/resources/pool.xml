@@ -1,7 +1,7 @@
 <allocations>
     <pool name="main">
         <schedulingMode>FAIR</schedulingMode>
-        <weight>10</weight>
+        <weight>20</weight>
         <minShare>2</minShare>
     </pool>
     <pool name="backend">

@@ -1,5 +1,7 @@
 package com.github.uryyyyyyy.hadoop.spark.batch.multiThreadPool
 
+import java.io.File
+
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,38 +12,43 @@ object Hello {
 
   def main(args: Array[String]): Unit = {
 
-    lazy val file1 = "s3://<bucket>/spark1"
-    lazy val file2 = "s3://<bucket>/spark2"
+    lazy val file1 = "file:///hoge"
+    lazy val file2 = "file:///hoge"
 
     val conf = new SparkConf().setAppName("Simple Application")
-    conf.set("spark.scheduler.allocation.file", "pool.xml")
-    val sc = new SparkContext(conf)
-    val rdd = sc.range(1, 3000, 1, 5)
-    val accessKey = sys.env("AWS_ACCESS_KEY_ID")
-    val secretKey = sys.env("AWS_SECRET_ACCESS_KEY")
-    lazy val dynamo = DynamoUtils.setupDynamoClientConnection(accessKey, secretKey)
+    val xml = getClass.getClassLoader.getResourceAsStream("pool.xml")
+    val homeDir = System.getProperty("user.home")
+    val f = new File(homeDir + "/.pool.xml")
 
+    val in = scala.io.Source.fromInputStream(xml)
+    val out = new java.io.PrintWriter(f)
+    try { in.getLines().foreach(out.print) }
+    finally { out.close() }
+
+    conf.set("spark.scheduler.mode", "FAIR")
+    conf.set("spark.scheduler.allocation.file", homeDir + "/.pool.xml")
+    val sc = new SparkContext(conf)
+    //sc.setLogLevel("INFO")
+    val rdd = sc.range(1, 1000, 1, 100)
     rdd.persist()
 
     val f1 = Future{
-      //backend logic
-      sc.setLocalProperty("spark.scheduler.pool", "backend")
+      //main (heavy )logic
+      sc.setLocalProperty("spark.scheduler.pool", "main")
+      println(sc.getSchedulingMode)
       rdd.map(v => {
-        val table = DynamoUtils.getTable(dynamo)
-
-        DynamoUtils.putItem(table, v)
-        val item = DynamoUtils.getItem(table, v)
-        item.toString
+        Thread.sleep(100)
+        "f2: " + v
       }).saveAsTextFile(file1)
     }
 
     val f2 = Future{
-      //main (heavy )logic
-      sc.setLocalProperty("spark.scheduler.pool", "main")
+      //backend logic2
+      sc.setLocalProperty("spark.scheduler.pool", "backend")
+      println(sc.getSchedulingMode)
       rdd.map(v => {
-        Thread.sleep(1000)
-        println("heavy result :#" + v)
-        "heavy result :#" + v
+        Thread.sleep(100)
+        "f3: " + v
       }).saveAsTextFile(file2)
     }
 

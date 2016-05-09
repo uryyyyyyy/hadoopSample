@@ -9,8 +9,8 @@ object Hello {
     val conf = new SparkConf().setAppName("Simple Application")
     val sc = new SparkContext(conf)
 
-    lazy val basePath = "s3://<bucket>/spark"
-    val rdd = sc.range(1, 10000, 1, 10)
+    lazy val basePath = "file:///home/shiba/Desktop/spark"
+    val rdd = sc.range(1, 1000, 1, 2)
     println("----Start----")
 
     //check for using scala-library_2.11
