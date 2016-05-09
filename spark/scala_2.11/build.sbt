@@ -25,6 +25,9 @@ lazy val streaming_helloWorld = (project in file("streaming_helloWorld")).
 lazy val batch_otherLibrary = (project in file("batch_otherLibrary")).
   settings(commonSettings: _*)
 
+lazy val batch_envVariable = (project in file("batch_envVariable")).
+  settings(commonSettings: _*)
+
 lazy val batch_hdfs = (project in file("batch_hdfs")).
   settings(commonSettings: _*)
 

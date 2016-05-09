@@ -1,4 +1,4 @@
-name := """spark2.11_batch_helloWorld"""
+name := """spark2.11_batch_envVariable"""
 
 version := "1.0"
 

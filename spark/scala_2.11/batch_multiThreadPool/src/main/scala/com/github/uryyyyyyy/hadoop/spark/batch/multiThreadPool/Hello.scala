@@ -12,8 +12,8 @@ object Hello {
 
   def main(args: Array[String]): Unit = {
 
-    lazy val file1 = "file:///hoge"
-    lazy val file2 = "file:///hoge"
+    lazy val file1 = "file:///home/shiba/Desktop/spark1"
+    lazy val file2 = "file:///home/shiba/Desktop/spark1"
 
     val conf = new SparkConf().setAppName("Simple Application")
     val xml = getClass.getClassLoader.getResourceAsStream("pool.xml")
@@ -32,17 +32,9 @@ object Hello {
     val rdd = sc.range(1, 1000, 1, 100)
     rdd.persist()
 
-    val f1 = Future{
       //main (heavy )logic
-      sc.setLocalProperty("spark.scheduler.pool", "main")
-      println(sc.getSchedulingMode)
-      rdd.map(v => {
-        Thread.sleep(100)
-        "f2: " + v
-      }).saveAsTextFile(file1)
-    }
 
-    val f2 = Future{
+    val f1 = Future {
       //backend logic2
       sc.setLocalProperty("spark.scheduler.pool", "backend")
       println(sc.getSchedulingMode)
@@ -50,9 +42,16 @@ object Hello {
         Thread.sleep(100)
         "f3: " + v
       }).saveAsTextFile(file2)
+
     }
 
+    sc.setLocalProperty("spark.scheduler.pool", "main")
+    println(sc.getSchedulingMode)
+    rdd.map(v => {
+      Thread.sleep(100)
+      "f2: " + v
+    }).saveAsTextFile(file1)
+
     Await.ready(f1, Duration.Inf)
-    Await.ready(f2, Duration.Inf)
   }
 }
