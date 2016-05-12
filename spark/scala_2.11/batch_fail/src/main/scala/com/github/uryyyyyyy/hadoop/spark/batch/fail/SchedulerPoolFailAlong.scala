@@ -1,4 +1,4 @@
-package com.github.uryyyyyyy.hadoop.spark.batch.multiThreadPool
+package com.github.uryyyyyyy.hadoop.spark.batch.fail
 
 import java.io.File
 
@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-object Hello {
+object SchedulerPoolFailAlong {
 
   def setSparkScheduler(conf: SparkConf) = {
     conf.set("spark.scheduler.mode", "FAIR")
@@ -25,36 +25,40 @@ object Hello {
 
   def main(args: Array[String]): Unit = {
 
-    lazy val file1 = "file:///home/shiba/Desktop/spark1"
-    lazy val file2 = "file:///home/shiba/Desktop/spark1"
-
-    val conf = new SparkConf().setAppName("Simple Application")
+    val conf = new SparkConf().setAppName("fail test app")
     setSparkScheduler(conf)
-
     val sc = new SparkContext(conf)
-    //sc.setLogLevel("INFO")
-    val rdd = sc.range(1, 1000, 1, 100)
-    rdd.persist()
+
+    val rdd = sc.parallelize(1 to 10)
 
     val f1 = Future {
-      //backend logic
       sc.setLocalProperty("spark.scheduler.pool", "backend")
       println(sc.getSchedulingMode)
-      rdd.map(v => {
-        Thread.sleep(100)
-        "f3: " + v
-      }).saveAsTextFile(file2)
-
+      rdd.map(failBy7(_))
+        .foreach(println(_))
     }
-    //main logic
     sc.setLocalProperty("spark.scheduler.pool", "main")
     println(sc.getSchedulingMode)
-    rdd.map(v => {
-      Thread.sleep(100)
-      "f2: " + v
-    }).saveAsTextFile(file1)
+    rdd.foreach(println(_))
+
+    //when "backend" job fail, also fail "main"
+    f1.onFailure{ case _ => {
+      sc.setLocalProperty("spark.scheduler.pool", "main")
+      println(sc.getSchedulingMode)
+      sc.parallelize(1 to 10)
+        .map(failBy7(_))
+        .foreach(println(_))
+    }}
 
     Await.ready(f1, Duration.Inf)
+
     sc.stop()
+  }
+
+  def failBy7(n :Int): Int ={
+    if(n == 7){
+      throw new RuntimeException("Executor cause fail by 7")
+    }
+    n
   }
 }

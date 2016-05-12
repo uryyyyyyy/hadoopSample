@@ -34,6 +34,9 @@ lazy val batch_hdfs = (project in file("batch_hdfs")).
 lazy val batch_dynamo = (project in file("batch_dynamo")).
   settings(commonSettings: _*)
 
+lazy val batch_fail = (project in file("batch_fail")).
+  settings(commonSettings: _*)
+
 lazy val batch_multiThreadPool = (project in file("batch_multiThreadPool")).
   settings(commonSettings: _*)
 
