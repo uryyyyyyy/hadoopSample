@@ -48,7 +48,7 @@ object SchedulerPoolFail {
       println(v)
     })
 
-    Await.ready(f1, Duration.Inf)
+    Await.result(f1, Duration.Inf)
 
     sc.stop()
   }

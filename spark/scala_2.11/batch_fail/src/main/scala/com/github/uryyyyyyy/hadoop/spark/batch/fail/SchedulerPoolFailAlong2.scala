@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-object SchedulerPoolDoubleFail {
+object SchedulerPoolFailAlong2 {
 
   def setSparkScheduler(conf: SparkConf) = {
     conf.set("spark.scheduler.mode", "FAIR")
@@ -24,10 +24,25 @@ object SchedulerPoolDoubleFail {
   }
 
   def main(args: Array[String]): Unit = {
-
     val conf = new SparkConf().setAppName("fail test app")
     setSparkScheduler(conf)
     val sc = new SparkContext(conf)
+
+    try{
+      execute(sc)
+    }catch{
+      //when "main" job fail, also fail "backend"
+      case _ =>
+        sc.setLocalProperty("spark.scheduler.pool", "backend")
+        println(sc.getSchedulingMode)
+        sc.parallelize(1 to 10)
+          .map(failBy7(_))
+          .foreach(println(_))
+    }
+
+  }
+
+  def execute(sc: SparkContext): Unit = {
 
     val rdd = sc.parallelize(1 to 10)
 
@@ -35,19 +50,11 @@ object SchedulerPoolDoubleFail {
       sc.setLocalProperty("spark.scheduler.pool", "backend")
       println(sc.getSchedulingMode)
       rdd.map(failBy7(_))
-        .foreach(v => {
-        Thread.sleep(100)
-        println(v)
-      })
+        .foreach(println(_))
     }
-    //main logic
     sc.setLocalProperty("spark.scheduler.pool", "main")
     println(sc.getSchedulingMode)
-    rdd.map(failBy7(_))
-      .foreach(v => {
-      Thread.sleep(100)
-      println(v)
-    })
+    rdd.foreach(println(_))
 
     Await.result(f1, Duration.Inf)
 
@@ -60,4 +67,6 @@ object SchedulerPoolDoubleFail {
     }
     n
   }
+
+  //when "backend" job fail, also fail "main"
 }

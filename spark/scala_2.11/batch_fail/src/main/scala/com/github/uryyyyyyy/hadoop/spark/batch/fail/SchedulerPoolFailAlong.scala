@@ -42,15 +42,15 @@ object SchedulerPoolFailAlong {
     rdd.foreach(println(_))
 
     //when "backend" job fail, also fail "main"
-    f1.onFailure{ case _ => {
+    f1.onFailure{ case _ =>
       sc.setLocalProperty("spark.scheduler.pool", "main")
       println(sc.getSchedulingMode)
       sc.parallelize(1 to 10)
         .map(failBy7(_))
         .foreach(println(_))
-    }}
+    }
 
-    Await.ready(f1, Duration.Inf)
+    Await.result(f1, Duration.Inf)
 
     sc.stop()
   }
