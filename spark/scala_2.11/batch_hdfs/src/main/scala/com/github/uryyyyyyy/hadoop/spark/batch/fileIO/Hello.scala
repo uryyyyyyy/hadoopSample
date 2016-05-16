@@ -17,10 +17,6 @@ object Hello {
     sc.hadoopConfiguration.set("fs.s3n.awsSecretAccessKey", secretKey)
     sc.hadoopConfiguration.set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
 
-    sc.hadoopConfiguration.set("fs.s3.awsAccessKeyId", accessKey)
-    sc.hadoopConfiguration.set("fs.s3.awsSecretAccessKey", secretKey)
-    sc.hadoopConfiguration.set("fs.s3.impl", "org.apache.hadoop.fs.s3.S3FileSystem")
-
     sc.hadoopConfiguration.set("fs.s3a.awsAccessKeyId", accessKey)
     sc.hadoopConfiguration.set("fs.s3a.awsSecretAccessKey", secretKey)
     sc.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
