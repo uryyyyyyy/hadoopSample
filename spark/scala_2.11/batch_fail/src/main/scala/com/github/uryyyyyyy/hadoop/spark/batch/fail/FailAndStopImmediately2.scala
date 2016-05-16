@@ -2,13 +2,13 @@ package com.github.uryyyyyyy.hadoop.spark.batch.fail
 
 import java.io.File
 
-import org.apache.spark.{SparkConf, SparkContext}
-import scala.concurrent.ExecutionContext.Implicits.global
+import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-object SchedulerPoolFail {
+object FailAndStopImmediately2 {
 
   def setSparkScheduler(conf: SparkConf) = {
     conf.set("spark.scheduler.mode", "FAIR")
@@ -24,37 +24,45 @@ object SchedulerPoolFail {
   }
 
   def main(args: Array[String]): Unit = {
-
     val conf = new SparkConf().setAppName("fail test app")
     setSparkScheduler(conf)
     val sc = new SparkContext(conf)
 
-    val rdd = sc.parallelize(1 to 200)
+    try{
+      execute(sc)
+    }catch{
+      case e:Throwable =>
+        sc.cancelAllJobs()
+        sc.stop()
+        throw e
+    }
+  }
+
+  def execute(sc: SparkContext): Unit = {
+
+    val rdd = sc.parallelize(1 to 200, 10)
 
     val f1 = Future {
       sc.setLocalProperty("spark.scheduler.pool", "backend")
       println(sc.getSchedulingMode)
-      rdd.map(failBy7(_))
+      rdd
         .foreach(v => {
-        Thread.sleep(100)
+        Thread.sleep(1000)
         println(v)
       })
     }
-    f1.onFailure{case e:Throwable =>
-      sc.cancelAllJobs()
-      sc.stop()
-      throw e
-    }
+
     //main logic
     sc.setLocalProperty("spark.scheduler.pool", "main")
     println(sc.getSchedulingMode)
-    rdd.foreach(v => {
+
+    rdd.map(failBy7(_))
+      .foreach(v => {
       Thread.sleep(100)
-      println(v)
+      println
     })
 
     Await.result(f1, Duration.Inf)
-
     sc.stop()
   }
 
