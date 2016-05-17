@@ -12,8 +12,6 @@ object Hello {
 
     val props = new Properties()
     props.load(getClass.getClassLoader.getResourceAsStream("myLog4j.properties"))
-    println("load properties")
-    println(props)
     PropertyConfigurator.configure(props)
 
     val driverLogger = LoggerFactory.getLogger(Hello.getClass)
@@ -21,15 +19,14 @@ object Hello {
     val conf = new SparkConf().setAppName("Simple Application")
     val sc = new SparkContext(conf)
     val rdd = sc.range(1, 100, 1, 10)
-    driverLogger.debug("----Start debug----")
     driverLogger.info("----Start info----")
 
-    lazy val logic = new DriverLogic()
+    lazy val logic = new ExecutorLogic()
 
     //check for using scala-library_2.11
     //if using 2.10, this method cause Exception.
     val map = "hello" -> "world"
-    driverLogger.info(map.toString())
+    driverLogger.debug(map.toString())
 
     rdd.map(i => i*2)
       .foreach(i => logic.log.info(i.toString))
