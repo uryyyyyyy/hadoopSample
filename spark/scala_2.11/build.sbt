@@ -6,9 +6,10 @@ lazy val sparkVersion = "1.6.1"
 
 lazy val commonSettings = Seq(
   organization := "com.github.uryyyyyyy",
-  scalaVersion := "2.11.7",
+  scalaVersion := "2.11.8",
   libraryDependencies ++= Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+    "org.slf4j" % "slf4j-api" % "1.7.21" % "provided",
     "org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
   )
 )
@@ -38,6 +39,9 @@ lazy val batch_fail = (project in file("batch_fail")).
   settings(commonSettings: _*)
 
 lazy val batch_multiThreadPool = (project in file("batch_multiThreadPool")).
+  settings(commonSettings: _*)
+
+lazy val batch_log = (project in file("batch_log")).
   settings(commonSettings: _*)
 
 lazy val sql_helloWorld = (project in file("sql_helloWorld")).
