@@ -1,8 +1,8 @@
 <allocations>
     <pool name="main">
         <schedulingMode>FAIR</schedulingMode>
-        <weight>20</weight>
-        <minShare>2</minShare>
+        <weight>1</weight>
+        <minShare>1</minShare>
     </pool>
     <pool name="backend">
         <schedulingMode>FIFO</schedulingMode>

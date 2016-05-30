@@ -2,13 +2,13 @@ package com.github.uryyyyyyy.hadoop.spark.batch.fail
 
 import java.io.File
 
-import org.apache.spark.{SparkConf, SparkContext}
-import scala.concurrent.ExecutionContext.Implicits.global
+import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-object SchedulerPoolFail {
+object FailAndStopImmediately {
 
   def setSparkScheduler(conf: SparkConf) = {
     conf.set("spark.scheduler.mode", "FAIR")
@@ -48,13 +48,24 @@ object SchedulerPoolFail {
     //main logic
     sc.setLocalProperty("spark.scheduler.pool", "main")
     println(sc.getSchedulingMode)
-    rdd.foreach(v => {
-      Thread.sleep(100)
-      println(v)
+    val rdd1 = rdd.groupBy(v => v%6).partitionBy(new HashPartitioner(3))
+
+    val f2 = Future {
+      sc.setLocalProperty("spark.scheduler.pool", "backend")
+      println(sc.getSchedulingMode)
+      rdd1.foreach(v => {
+        Thread.sleep(10000)
+        println(v)
+      })
+    }
+
+    rdd1.foreach(v => {
+      Thread.sleep(10000)
+      println
     })
 
     Await.result(f1, Duration.Inf)
-
+    Await.result(f2, Duration.Inf)
     sc.stop()
   }
 
