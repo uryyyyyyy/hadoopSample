@@ -19,9 +19,6 @@ lazy val batch_helloWorld = (project in file("batch_helloWorld")).
 lazy val batch_multiFileOutput = (project in file("batch_multiFileOutput")).
   settings(commonSettings: _*)
 
-lazy val streaming_helloWorld = (project in file("streaming_helloWorld")).
-  settings(commonSettings: _*)
-
 lazy val batch_otherLibrary = (project in file("batch_otherLibrary")).
   settings(commonSettings: _*)
 
@@ -38,13 +35,4 @@ lazy val batch_fail = (project in file("batch_fail")).
   settings(commonSettings: _*)
 
 lazy val batch_multiThreadPool = (project in file("batch_multiThreadPool")).
-  settings(commonSettings: _*)
-
-lazy val sql_helloWorld = (project in file("sql_helloWorld")).
-  settings(commonSettings: _*)
-
-lazy val mllib_helloWorld = (project in file("mllib_helloWorld")).
-  settings(commonSettings: _*)
-
-lazy val graphx_helloWorld = (project in file("graphx_helloWorld")).
   settings(commonSettings: _*)
