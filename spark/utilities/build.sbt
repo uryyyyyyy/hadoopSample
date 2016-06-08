@@ -9,6 +9,7 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
   libraryDependencies ++= Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+    "org.apache.spark" %% "spark-core" % sparkVersion % "test",
     "org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
   ),
   assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
@@ -30,7 +31,8 @@ lazy val sql_sample = (project in file("sql_sample"))
     name := """spark2.11_sql_sample""",
     version := "0.1.0",
     libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-sql" % sparkVersion % "provided"
+      "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
+      "org.apache.spark" %% "spark-sql" % sparkVersion % "test"
     )
   )
 
@@ -40,7 +42,8 @@ lazy val mllib_sample = (project in file("mllib_sample"))
     name := """spark2.11_mllib_sample""",
     version := "0.1.0",
     libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided"
+      "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+      "org.apache.spark" %% "spark-mllib" % sparkVersion % "test"
     )
   )
 
