@@ -5,8 +5,8 @@ version := "1.0"
 lazy val sparkVersion = "1.6.1"
 
 lazy val commonSettings = Seq(
-  organization := "com.github.uryyyyyyy",
   scalaVersion := "2.11.7",
+  organization := "com.github.uryyyyyyy",
   libraryDependencies ++= Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
     "org.apache.spark" %% "spark-core" % sparkVersion % "test",
@@ -42,6 +42,7 @@ lazy val mllib_sample = (project in file("mllib_sample"))
     name := """spark2.11_mllib_sample""",
     version := "0.1.0",
     libraryDependencies ++= Seq(
+      "org.apache.lucene" % "lucene-kuromoji" % "3.6.2",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "test"
     )
@@ -54,16 +55,5 @@ lazy val graphx_sample = (project in file("graphx_sample"))
     version := "0.1.0",
     libraryDependencies ++= Seq(
       "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided"
-    )
-  )
-
-lazy val graphFrame_sample = (project in file("graphFrame_sample"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := """spark2.11_graphFrame_sample""",
-    version := "0.1.0",
-    unmanagedBase := baseDirectory.value / "graphFrame",
-    libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-sql" % sparkVersion % "provided"
     )
   )
