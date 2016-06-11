@@ -42,6 +42,7 @@ lazy val mllib_sample = (project in file("mllib_sample"))
     name := """spark2.11_mllib_sample""",
     version := "0.1.0",
     libraryDependencies ++= Seq(
+      "com.github.nscala-time" %% "nscala-time" % "1.2.0",
       "org.apache.lucene" % "lucene-kuromoji" % "3.6.2",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "test"

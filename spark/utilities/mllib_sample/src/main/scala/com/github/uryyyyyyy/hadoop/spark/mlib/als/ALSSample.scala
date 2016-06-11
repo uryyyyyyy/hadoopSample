@@ -1,4 +1,4 @@
-package com.github.uryyyyyyy.hadoop.spark.mlib
+package com.github.uryyyyyyy.hadoop.spark.mlib.als
 
 import org.apache.spark.mllib.recommendation.{ALS, MatrixFactorizationModel, Rating}
 import org.apache.spark.{SparkConf, SparkContext}
