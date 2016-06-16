@@ -4,6 +4,8 @@ version := "1.0"
 
 lazy val sparkVersion = "1.6.1"
 
+resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
   organization := "com.github.uryyyyyyy",
@@ -46,6 +48,18 @@ lazy val mllib_sample = (project in file("mllib_sample"))
       "org.apache.lucene" % "lucene-kuromoji" % "3.6.2",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
       "org.apache.spark" %% "spark-mllib" % sparkVersion % "test"
+    )
+  )
+
+lazy val mllib_web = (project in file("mllib_web"))
+  .settings(commonSettings: _*)
+  .settings(
+//    scalaVersion := "2.10.6",
+    name := """spark2.11_mllib_sample""",
+    version := "0.1.0",
+    libraryDependencies ++= Seq(
+      "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+      "com.twitter" %% "finagle-http" % "6.35.0"
     )
   )
 
